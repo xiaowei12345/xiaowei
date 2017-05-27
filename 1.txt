@@ -1,2 +1,6 @@
 username:xiaowei3254234543
+<<<<<<< HEAD
 Creating a new branch is quick & simple.
+=======
+Creating a new branch is quick AND simple.
+>>>>>>> fea
