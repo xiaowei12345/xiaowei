@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Complex Layout - jQuery EasyUI Demo</title>
+		<link rel="stylesheet" type="text/css" href="../../script/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../script/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../script/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../demo.css">
+		<script type="text/javascript" src="../../script/jquery.min.js"></script>
+		<script type="text/javascript" src="../../script/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../../script/bootstrap.min.js"></script>
+		
+		<script>
+			$(function(){
+				var title2 = " 入门网站包";
+				var content2 = " 您将通过网页进行免费域名注册。是的覅快乐时光回复还是东方航空收到货发了收到回复收到回复莱克斯顿华发商都收到回复is电话费iOS的哈佛is的哈佛红烧豆腐";
+				var kong = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				var kong2 = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				
+				$.ajax({  
+			    	type:"post",
+			        url:"/uitest/newslist",
+			        timeout:3000,
+			        dataType:"json",
+			        success:function(data){  
+			        			$.each(data.news, function(index, json) { 
+			        				$("#newslist").append("<div class='list-group' style='text-align:center;width:60%;'>");
+			        				$("#newslist").append("<a href='"+json.url+"' target='_blank' class='list-group-item active' style='width:60%;text-align: left'> <h4 style='text-align:left;width:60%;' class='list-group-item-heading'>"+json.title+"</h4></a>");
+			        				$("#newslist").append("<a href='"+json.url+"' class='list-group-item' target='_blank' style='height: 80px;width:60%;text-align: left'> <p class='list-group-item-text'>"+json.content+"</p></a>");
+			        				$("#newslist").append("<a style='height: 40px;width:60%;text-align: left' href='#' class='list-group-item'><span style='text-align: left;height: 30px' class='list-group-item-heading'>发布时间："+json.time+"</span>"+kong+kong+kong+kong+kong+kong+kong2+"<span style='text-align: right;height: 30px' class='list-group-item-heading'>阅读量："+json.read+" </span></a>");
+			        				$("#newslist").append("</div>");
+			        			}); 
+			        		},  
+			        //请求出错的处理  
+			        error:function(){  
+			        	alert("请求出错,请刷新重试");  
+			        }  
+			    });  				
+			});
+			
+			function showPdf(isShow) {
+	            var state = "";
+	            if (isShow) {
+	                state = "block";
+	            } else {
+	                state = "none";
+	            }
+	            var pop = document.getElementById("pop");
+	            pop.style.display = state;
+	            var lightbox = document.getElementById("lightbox");
+	            lightbox.style.display = state;
+	            var url = '/third/doc/eduHelp.pdf';
+	        }
+	        
+	        function check(){
+	        	if($("#name").val()==""){
+	    			return false;
+	    		}   
+	        	if($("#phone").val()==""){
+	    			return false;
+	    		}   
+	        	$('#sign').window('open')
+	        }
+	        
+	        function register(){
+	        	if($("#name").val()==""){
+	    			return false;
+	    		}   
+	        	if($("#phone").val()==""){
+	    			return false;
+	    		}   
+	        	var reason = "";
+	        	var remark = "";
+	        	var name = $("#name").val();
+	        	var phone = $("#phone").val();
+	        	var city = $("#city").val();
+	        	$("#reason").val()=="" ? reason = "" : reason = $("#reason").val();
+	        	$("#remark").val()=="" ? remark = "" : remark = $("#remark").val();
+	        	
+	        	var data = '{"type":request'+',"name":'+name+',"phone":'+phone+',"city":'+city+',"reason":'+'"'+reason+'"'+',"remark":'+'"'+remark+'"'+'}';
+	        	handleAction(data);
+	        	$('#sign').window('close')
+	        }
+	       
+	        function page(type){
+	        	handleAction('{"type":'+type+'}');
+	        }
+		</script>
+	</head>
+<body class="easyui-layout">
+	
+	<div class="lightbox" id="lightbox"></div>
+    <div id="pop" class="pop" style="display: none;">
+        <a href="javascript:close()" style="
+            position: absolute;
+            right: -90px;
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+        	id="close"
+        	class="easyui-linkbutton" 
+        	plain="true">关闭</a>
+        <iframe src="" frameborder="0" id="pdfContainer" name="pdfContainer"></iframe>
+    </div>
+
+	<div id="newslist" style="text-align: center;width:60%;" data-options="region:'center',title:'成员入驻申请',iconCls:'icon-ok'"></div>
+	
+</body>
+
+</html>
