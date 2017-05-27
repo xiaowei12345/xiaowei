@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+   		id="third"
+   		name="/script"
+        point="org.eclipse.equinox.http.registry.resources">
+        <resource 
+        	alias="/third"
+        	base-name="/script">
+        </resource>
+   </extension>
+
+</plugin>

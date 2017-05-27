@@ -1,0 +1,13 @@
+define orm GetPersonByNameOrm(@name string not null)
+	mapping intf.PersonImpl
+begin
+	select 
+		t."city" as "city",
+		t."phone" as "phone",
+		t."reason" as "reason",
+		t."RECID" as "recid",
+		t."remark" as "remark",
+		t."username" as "username"
+	from PERSON as t
+	where t.username = @name
+end

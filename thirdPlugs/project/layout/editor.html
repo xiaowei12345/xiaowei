@@ -1,0 +1,245 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+		<link rel="stylesheet" type="text/css" href="/third/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="/third/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="/third/demo.css">
+		<script type="text/javascript" src="/third/jquery.min.js"></script>
+		<script type="text/javascript" src="/third/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/third/pdf.js"></script>
+		<script type="text/javascript" src="/third/js/check.js"></script>
+		<!--引入wangEditor.css-->
+		<link rel="stylesheet" type="text/css" href="/third/js/wangEditor-2.1.15/dist/css/wangEditor.min.css"  charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/third/js/wangEditor-2.1.15/dist/css/btn.css">
+
+		<style type="text/css">
+	        .lightbox{
+	            position: fixed;
+	            top: 0px;
+	            left: 0px;
+	            height: 100%;
+	            width: 100%;
+	            z-index: 7;
+	            opacity: 0.3;
+	            display: block;
+	            background-color: rgb(0, 0, 0);
+	            display: none;
+	        }
+	        .pop,iframe{
+	            position: absolute;
+	            left: 50%;
+	            top:0;
+	            width: 893px;
+	            height: 100%;
+	            margin-left: -446.5px;
+	            z-index: 9;
+	        }
+   		</style>
+		
+		<script>
+			$(function(){
+				var index = 0;
+				var t = $('#tt');
+				var tabs = t.tabs('tabs');
+				setInterval(function(){
+					t.tabs('select', tabs[index].panel('options').title);
+					index++;
+					if (index >= tabs.length){
+						index = 0;
+					}
+				}, 3000);
+			});
+			
+			function showPdf(isShow) {
+	            var state = "";
+	            if (isShow) {
+	                state = "block";
+	            } else {
+	                state = "none";
+	            }
+	            var pop = document.getElementById("pop");
+	            pop.style.display = state;
+	            var lightbox = document.getElementById("lightbox");
+	            lightbox.style.display = state;
+	            var url = '/third/doc/eduHelp.pdf';
+	        }
+	        function close() {
+	            showPdf(false);
+	        }
+	        
+	        function page(type){
+	        	handleAction('{"type":'+type+'}');
+	        }
+		</script>
+</head>
+<body class="easyui-layout">
+
+	<div class="lightbox" id="lightbox"></div>
+    <div id="pop" class="pop" style="display: none;">
+        <a href="javascript:close()" style="
+            position: absolute;
+            right: -90px;
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+        	id="close"
+        	class="easyui-linkbutton" 
+        	plain="true">关闭</a>
+        <iframe src="" frameborder="0" id="pdfContainer" name="pdfContainer"></iframe>
+    </div>
+
+	<div class="easyui-layout" data-options="region:'north',border:false" style="height: 120px">
+		<div data-options="region:'north',border:false" style="height:68px;background-image: url(/third/images/logo.png)"></div>
+		<div data-options="region:'south',border:false,split:true" style="height:55px;">
+			<div class="easyui-panel" style="padding: 10px;">
+				<a href="/app/uitest" class="easyui-linkbutton" data-options="plain:true" onclick="">首页</a>
+				<a id="btn-edit" href="#" class="easyui-menubutton"
+					data-options="menu:'#mm1',iconCls:'icon-edit'">编辑</a> <a href="#"
+					class="easyui-menubutton"
+					data-options="menu:'#mm2',iconCls:'icon-help'">帮助</a> 
+					<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-news'" onclick="page('newslist')">动态</a>	
+					<a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">关于</a>
+			</div>
+			<div id="mm1" style="width: 150px;">
+				<div data-options="iconCls:'icon-undo'">任务接收</div>
+				<div data-options="iconCls:'icon-redo'">成员召回</div>
+				<div class="menu-sep"></div>
+				<div>驻点分布</div>
+				<div>入驻申请</div>
+				<div>
+					<a href="#" class="easyui-linkbutton" onclick="page('register')"; plain="true" style="text-align: left;">成员申请</a>
+				</div>
+				<div class="menu-sep"></div>
+				<div>
+					<span>更多</span>
+					<div>
+						<div>
+							<a href="#" class="easyui-linkbutton" onclick="page('editor')"; plain="true" style="text-align: left;">新闻动态编辑</a>
+						</div>
+						<div>Link</div>
+						<div>Navigation Toolbar</div>
+						<div>Bookmark Toolbar</div>
+						<div class="menu-sep"></div>
+						<div>New Toolbar...</div>
+					</div>
+				</div>
+			</div>
+			<div id="mm2" style="width: 100px;">
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">入驻流程</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">最新消息</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">联系我们</a>
+				</div>
+			</div>
+			<div id="mm3" class="menu-content"
+				style="background: #f0f0f0; padding: 10px; text-align: left">
+				<img src="http://www.jeasyui.com/images/logo1.png"
+					style="width: 150px; height: 40px">
+				<p style="font-size: 14px; color: #444;">Try jQuery EasyUI to
+					build your modern, interactive, javascript applications.</p>
+			</div>
+		</div>
+	</div>
+
+<div style="text-align: center;width:100%;" data-options="region:'center',title:'新闻动态上传',iconCls:'icon-ok'">
+	
+	<table width=100% cellspacing=0 border=0>
+		<tr height="15px"></tr>
+		<tr height="15px" align="left">
+			<td>
+				&nbsp;标题：&nbsp;<input id="title" type="text" name="title" style="width:440px;"/>
+			</td>
+		</tr>
+		<tr height="15px"></tr>
+	</table>
+	
+	<div id="div1" style="height: 100%;max-height: 74%	">
+    	<p id="zhangzhiwei">请输入内容......</p>
+	</div>
+	<table width=100% cellspacing=0 border=0>
+		<tr height="15px"></tr>
+	</table>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="check()">提交</a>
+	
+</div>	
+<script type="text/javascript" src="/third/js/wangEditor-2.1.15/dist/js/lib/jquery-1.10.2.min.js"  charset="UTF-8"></script>
+<script type="text/javascript" src="/third/js/wangEditor-2.1.15/dist/js/wangEditor.min.js"  charset="UTF-8"></script>
+<script type="text/javascript" src="/third/jquery.tips.js"></script>
+<script type="text/javascript">
+	var biaoji = 1;
+    var editor = new wangEditor('div1');
+    // 上传图片（举例）
+    editor.config.uploadImgUrl = '/m/file/webupload';
+	editor.config.uploadParams = {type:'1'};
+    editor.config.menus = [
+       					'bold',
+       					'underline',
+       					'italic',
+       					'strikethrough',
+       					'eraser',
+       					'forecolor',
+       					'bgcolor',
+       					'|',
+       					'fontfamily',
+       					'fontsize',
+       					'head',
+       					'unorderlist',
+       					'orderlist',
+       					'alignleft',
+       					'aligncenter',
+       					'alignright',
+       					'|',
+       					'link',
+       					'unlink',
+       					'table',
+       					'emotion',
+       					'|',
+       					'img',
+       					'video',	
+       					'|',
+       					'undo',
+       					'redo',
+       					'fullscreen'
+                               ];
+    // 配置 onchange 事件
+    editor.onchange = function () {
+        // 编辑区域内容变化时，实时打印出当前内容
+        console.log(this.$txt.html());
+        if(biaoji == 1){
+       		$('#zhangzhiwei').html("");
+       		biaoji = 2;
+        }
+    };
+    editor.create();
+    
+    function check(){
+    	if($('#title').val().trim()==""){
+    		$('#title').tips({
+				side:3,
+		           msg:'标题不准为空偶',
+		           bg:'#AE81FF',
+		           time:2
+		       });
+			return false;
+		}   
+    	var txt = editor.$txt.text();
+    	if(txt.length <= 20){
+    		$('#div1').tips({
+				side:3,
+		           msg:'正文内容最少为20字符',
+		           bg:'#AE81FF',
+		           time:2
+		       });
+			return false;
+    	}
+    	var data = '{"type":"news"'+',"title":"'+escape($('#title').val().trim())+'","content":"'+escape(editor.$txt.html())+'"}';
+    	handleAction(data);
+    }
+</script>
+</body>
+</html>

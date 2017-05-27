@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dna>
+	<publish>
+		<services>
+			<!-- service space="dna/core" class="com.jiuqi.dna.core.XXService" -->
+			<service space="dna" class="third.service.PersonService"/>
+			<service space="dna" class="third.service.SignService"/>
+			<service space="dna" class="third.service.NewsService"/>
+		</services>
+		<remote-service name="checkUser" class="third.service.CheckInfoRemoteService"/>
+		<ui-client-scripts>
+			<script name="check" path="script/js/check.js"/>
+			<script name="signin" path="script/js/signin.js"/>
+		</ui-client-scripts>
+		<orms>
+			<!-- orm space="dna/core" class="com.jiuqi.dna.core.XXORM" -->
+			<orm space="dna" class="third.script.PersonOrm"/>
+			<orm space="dna" class="third.script.GetPersonByNameOrm"/>
+			<orm space="dna" class="third.script.NewsOrm"/>
+		</orms>
+		<commands>
+			<!-- command space="dna/core" class="com.jiuqi.dna.core.XXCommand" -->
+		</commands>
+		<querys>
+			<!-- query space="dna/core" class="com.jiuqi.dna.core.XXQuery" -->
+		</querys>
+		<tables>
+			<!--table space="dna/core" class="com.jiuqi.dna.core.impl.TD_BundleBin" /-->
+			<table space="dna" class="third.table.TB_PERSON"/>
+			<table space="dna" class="third.table.TB_NEWS"/>
+		</tables>
+		<ui-entrys>
+			<!--uientry class="com.jiuqi.dna.bap.workflowmanager.define.ui.DemoApplicationUIEntry" name="workflowdefine">
+				</uientry-->
+			<uientry class="thirdPlugs.MyEntry" name="uitest"/>
+		</ui-entrys>
+		<pages>
+			<!--page space="mydemo" name="testtemplate" class="com.jiuqi.dna.ui.template.launch.TemplatePage" /-->
+			<page space="dna" name="uitestpage" class="thirdPlugs.UiTestPage"/>
+		</pages>
+		<ui-stylesheets>
+			<!-- stylesheet name="stylesheet" title="stylesheet" path="com/jiuqi/dna/ui/demo/stylesheet.css" -->
+		</ui-stylesheets>
+		<portlets>
+			<!-- portlet name="portlet" class="com.jiuqi.dna.ui.XXPortlet" -->
+		</portlets>
+	</publish>
+	<servlets>
+		<servlet space="dna" path="/m/griddata" class="third.servlet.GridDatsServlet"/>
+		<servlet space="dna" path="/m/treedata" class="third.servlet.TreeDataServlet"/>
+		<servlet space="dna" path="/m/person" class="third.servlet.PersonCheckServlet"/>
+		<servlet space="dna" path="/m/fileupload" class="third.servlet.FileUploadServlet"/>
+		<servlet space="dna" path="/m/uploadprogress" class="third.servlet.UploadProgressServlet"/>
+		<servlet space="dna" path="/m/newslist" class="third.servlet.NewsListServlet"/>
+		<servlet space="dna" path="/m/file/webupload" class="third.servlet.ImgUploadServlet"/>
+		<servlet space="dna" path="/m/imgshow" class="third.servlet.ImgShowServlet"/>
+		<servlet space="dna" path="/m/detail" class="third.servlet.NewsDetailServlet"/>
+	</servlets>
+</dna>

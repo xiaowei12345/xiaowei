@@ -1,0 +1,12 @@
+define orm PersonOrm()
+	mapping intf.PersonImpl
+begin
+	select 
+		t."RECID" as "recid",
+		t."city" as "city",
+		t."phone" as "phone",
+		t."reason" as "reason",
+		t."remark" as "remark",
+		t."username" as "username"
+	from PERSON as t
+end

@@ -1,0 +1,10 @@
+define orm NewsOrm()
+	mapping intf.NewsImpl
+begin
+	select 
+		t."content" as "content",
+		t."RECID" as "recid",
+		t."title" as "title",
+		t."createTime" as "time"
+	from NEWS as t
+end

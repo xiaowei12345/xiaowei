@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Complex Layout - jQuery EasyUI Demo</title>
+		<link rel="stylesheet" type="text/css" href="/third/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="/third/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="/third/demo.css">
+		<script type="text/javascript" src="/third/jquery.min.js"></script>
+		<script type="text/javascript" src="/third/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/third/pdf.js"></script>
+		<script type="text/javascript" src="/third/js/check.js"></script>
+		
+		<style type="text/css">
+	        .lightbox{
+	            position: fixed;
+	            top: 0px;
+	            left: 0px;
+	            height: 100%;
+	            width: 100%;
+	            z-index: 7;
+	            opacity: 0.3;
+	            display: block;
+	            background-color: rgb(0, 0, 0);
+	            display: none;
+	        }
+	        .pop,iframe{
+	            position: absolute;
+	            left: 50%;
+	            top:0;
+	            width: 893px;
+	            height: 100%;
+	            margin-left: -446.5px;
+	            z-index: 9;
+	        }
+   		</style>
+		
+		<script>
+			$(function(){
+				var index = 0;
+				var t = $('#tt');
+				var tabs = t.tabs('tabs');
+				setInterval(function(){
+					t.tabs('select', tabs[index].panel('options').title);
+					index++;
+					if (index >= tabs.length){
+						index = 0;
+					}
+				}, 3000);
+			});
+			
+			function showPdf(isShow) {
+	            var state = "";
+	            if (isShow) {
+	                state = "block";
+	            } else {
+	                state = "none";
+	            }
+	            var pop = document.getElementById("pop");
+	            pop.style.display = state;
+	            var lightbox = document.getElementById("lightbox");
+	            lightbox.style.display = state;
+	            var url = '/third/doc/eduHelp.pdf';
+	        }
+	        function close() {
+	            showPdf(false);
+	        }
+	        
+	        function check(){
+	        	if($("#name").val()==""){
+	    			return false;
+	    		}   
+	        	if($("#phone").val()==""){
+	    			return false;
+	    		}   
+	        	$('#sign').window('open')
+	        }
+	        
+	        function register(){
+	        	if($("#name").val()==""){
+	    			return false;
+	    		}   
+	        	if($("#phone").val()==""){
+	    			return false;
+	    		}   
+	        	var reason = "";
+	        	var remark = "";
+	        	var name = $("#name").val();
+	        	var phone = $("#phone").val();
+	        	var city = $("#city").val();
+	        	$("#reason").val()=="" ? reason = "" : reason = $("#reason").val();
+	        	$("#remark").val()=="" ? remark = "" : remark = $("#remark").val();
+	        	
+	        	var data = '{"type":request'+',"name":'+name+',"phone":'+phone+',"city":'+city+',"reason":'+'"'+reason+'"'+',"remark":'+'"'+remark+'"'+'}';
+	        	handleAction(data);
+	        	$('#sign').window('close')
+	        }
+	       
+	        function page(type){
+	        	handleAction('{"type":'+type+'}');
+	        }
+		</script>
+	</head>
+<body class="easyui-layout">
+	
+	<div class="lightbox" id="lightbox"></div>
+    <div id="pop" class="pop" style="display: none;">
+        <a href="javascript:close()" style="
+            position: absolute;
+            right: -90px;
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+        	id="close"
+        	class="easyui-linkbutton" 
+        	plain="true">关闭</a>
+        <iframe src="" frameborder="0" id="pdfContainer" name="pdfContainer"></iframe>
+    </div>
+
+	<div class="easyui-layout" data-options="region:'north',border:false" style="height: 120px">
+		<div data-options="region:'north',border:false" style="height:68px;background-image: url(/third/images/logo.png)"></div>
+		<div data-options="region:'south',border:false,split:true" style="height:55px;">
+			<div class="easyui-panel" style="padding: 10px;">
+				<a href="/app/uitest" class="easyui-linkbutton" data-options="plain:true" onclick="">首页</a>
+				<a id="btn-edit" href="#" class="easyui-menubutton"
+					data-options="menu:'#mm1',iconCls:'icon-edit'">编辑</a> <a href="#"
+					class="easyui-menubutton"
+					data-options="menu:'#mm2',iconCls:'icon-help'">帮助</a> 
+					<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-news'" onclick="page('newslist')">动态</a>	
+					<a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">关于</a>
+			</div>
+			<div id="mm1" style="width: 150px;">
+				<div data-options="iconCls:'icon-undo'">任务接收</div>
+				<div data-options="iconCls:'icon-redo'">成员召回</div>
+				<div class="menu-sep"></div>
+				<div>驻点分布</div>
+				<div>入驻申请</div>
+				<div>
+					<a href="#" class="easyui-linkbutton" onclick="page('register')"; plain="true" style="text-align: left;">成员申请</a>
+				</div>
+				<div class="menu-sep"></div>
+				<div>
+					<span>更多</span>
+					<div>
+						<div>
+							<a href="#" class="easyui-linkbutton" onclick="page('editor')"; plain="true" style="text-align: left;">新闻动态编辑</a>
+						</div>
+						<div>Link</div>
+						<div>Navigation Toolbar</div>
+						<div>Bookmark Toolbar</div>
+						<div class="menu-sep"></div>
+						<div>New Toolbar...</div>
+					</div>
+				</div>
+			</div>
+			<div id="mm2" style="width: 100px;">
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">入驻流程</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">最新消息</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">联系我们</a>
+				</div>
+			</div>
+			<div id="mm3" class="menu-content"
+				style="background: #f0f0f0; padding: 10px; text-align: left">
+				<img src="http://www.jeasyui.com/images/logo1.png"
+					style="width: 150px; height: 40px">
+				<p style="font-size: 14px; color: #444;">Try jQuery EasyUI to
+					build your modern, interactive, javascript applications.</p>
+			</div>
+		</div>
+	</div>
+
+	<div style="text-align: center;width:100%;" data-options="region:'center',title:'成员入驻申请',iconCls:'icon-ok'">
+			<form style="text-align: center;" id="ff" method="post">
+				<table align="center" cellspacing="10">
+					<tr>
+						<td>用户名：</td>
+						<td><input id="name" class="easyui-validatebox" type="text" name="name" required="true" style="width:240px;"/></td>
+					</tr>
+					<tr>
+						<td>电话：</td>
+						<td><input id="phone" class="easyui-validatebox" required="true" type="text" name="address" style="width:240px;"/></td>
+					</tr>
+					<tr>
+						<td>城市：</td>
+						<td>
+							<select id="city" class="easyui-validatebox easyui-combobox" required="true" name="state" label="" labelPosition="top" style="width:100%;">
+								<option value="北京">北京</option>
+								<option value="上海">上海</option>
+								<option value="广州">广州</option>
+								<option value="深圳">深圳</option>
+								<option value="成都">成都</option>
+								<option value="香港">香港</option>
+								<option value="澳门">澳门</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>申请原因：</td>
+						<td><textarea id="reason" name="a" style="width:240px;height:80px;"></textarea></td>
+					</tr>
+					<tr>
+						<td>备注：</td>
+						<td><textarea id="remark" name="a" style="width:240px;height:80px;"></textarea></td>
+					</tr>
+				</table>
+			</form>
+		<div id="dlg-buttons">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="register()">提交申请</a>
+			<div id="sign" closed="true" class="easyui-window" title="信息确认" data-options="iconCls:'icon-save'" style="width:300px;height:130px;padding:5px;">
+				<div class="easyui-layout" data-options="fit:true">
+					<div data-options="region:'center'" style="padding:10px;">
+						信息提交后将不可更改，确认提交吗？
+					</div>
+					<div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0;">
+							<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="register()" "width:80px">Ok</a>
+							<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="$('#sign').window('close')" style="width:80px">Cancel</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+
+</html>

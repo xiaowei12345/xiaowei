@@ -1,0 +1,152 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+		<link rel="stylesheet" type="text/css" href="/third/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="/third/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="/third/demo.css">
+		<link rel="stylesheet" type="text/css" href="/third/themes/bootstrap/bootstrap.min.css">
+		<script type="text/javascript" src="/third/jquery.min.js"></script>
+		<script type="text/javascript" src="/third/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/third/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/third/pdf.js"></script>
+		<script type="text/javascript" src="/third/js/check.js"></script>
+		<!--引入wangEditor.css-->
+		<link rel="stylesheet" type="text/css" href="/third/js/wangEditor-2.1.15/dist/css/wangEditor.min.css"  charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/third/js/wangEditor-2.1.15/dist/css/btn.css">
+
+		<style type="text/css">
+	        .lightbox{
+	            position: fixed;
+	            top: 0px;
+	            left: 0px;
+	            height: 100%;
+	            width: 100%;
+	            z-index: 7;
+	            opacity: 0.3;
+	            display: block;
+	            background-color: rgb(0, 0, 0);
+	            display: none;
+	        }
+	        .pop,iframe{
+	            position: absolute;
+	            left: 50%;
+	            top:0;
+	            width: 893px;
+	            height: 100%;
+	            margin-left: -446.5px;
+	            z-index: 9;
+	        }
+   		</style>
+		
+		<script>
+			$(function(){
+				var title2 = " 入门网站包";
+				var content2 = " 您将通过网页进行免费域名注册。是的覅快乐时光回复还是东方航空收到货发了收到回复收到回复莱克斯顿华发商都收到回复is电话费iOS的哈佛is的哈佛红烧豆腐";
+				var kong = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				var kong2 = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				
+				$.ajax({  
+			    	type:"post",
+			        url:"/m/newslist",
+			        timeout:3000,
+			        dataType:"json",
+			        success:function(data){  
+			        			$.each(data.news, function(index, json) { 
+			        				$("#newslist").append("<div class='list-group' style='text-align:center;width:60%;'>");
+			        				$("#newslist").append("<a href='"+json.url+"' target='_blank' class='list-group-item active' style='width:60%;text-align: left'> <h4 style='text-align:left;width:60%;' class='list-group-item-heading'>"+json.title+"</h4></a>");
+			        				$("#newslist").append("<a href='"+json.url+"' class='list-group-item' target='_blank' style='height: 80px;width:60%;text-align: left'> <p class='list-group-item-text'>read more....</p></a>");
+			        				$("#newslist").append("<a style='height: 40px;width:60%;text-align: left' href='#' class='list-group-item'><span style='text-align: left;height: 30px' class='list-group-item-heading'>发布时间："+json.time+"</span>"+kong+kong+kong+kong+kong+kong+kong2+"<span style='text-align: right;height: 30px' class='list-group-item-heading'>阅读量："+json.read+" </span></a>");
+			        				$("#newslist").append("</div>");
+			        			}); 
+			        		},  
+			        //请求出错的处理  
+			        error:function(){  
+			        	alert("请求出错,请刷新重试");  
+			        }  
+			    });  				
+			});
+			
+			function showPdf(isShow) {
+	            var state = "";
+	            if (isShow) {
+	                state = "block";
+	            } else {
+	                state = "none";
+	            }
+	            var pop = document.getElementById("pop");
+	            pop.style.display = state;
+	            var lightbox = document.getElementById("lightbox");
+	            lightbox.style.display = state;
+	            var url = '/third/doc/eduHelp.pdf';
+	        }
+			
+	        function close() {
+	            showPdf(false);
+	        }
+	        
+	        function page(type){
+	        	handleAction('{"type":'+type+'}');
+	        }
+		</script>
+</head>
+<body style="text-align: center">
+
+	<div class="lightbox" id="lightbox"></div>
+    <div id="pop" class="pop" style="display: none;">
+        <a href="javascript:close()" style="
+            position: absolute;
+            right: -90px;
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+        	id="close"
+        	class="easyui-linkbutton" 
+        	plain="true">关闭</a>
+        <iframe src="" frameborder="0" id="pdfContainer" name="pdfContainer"></iframe>
+    </div>
+
+	<nav class="navbar navbar-default" role="navigation">
+	    <div class="container-fluid">
+		    <div class="navbar-header">
+		        <a class="navbar-brand" href="#">红客联盟</a>
+		    </div>
+		    <div>
+		        <ul class="nav navbar-nav">
+		            <li class="active"><a href="/app/uitest">首页</a></li>
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		                  		  帮助
+		                    <b class="caret"></b>
+		                </a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="/third/doc/eduHelp.pdf" target="pdfContainer" onclick="showPdf(true)">入驻流程</a></li>
+		                    <li><a href="/third/doc/eduHelp.pdf" target="pdfContainer" onclick="showPdf(true)">最新消息</a></li>
+		                    <li><a href="/third/doc/eduHelp.pdf" target="pdfContainer" onclick="showPdf(true)">联系我们</a></li>
+		                </ul>
+		            </li>
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		                  		编辑
+		                    <b class="caret"></b>
+		                </a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="#">任务接受</a></li>
+		                    <li><a href="#">成员召回</a></li>
+		                    <li><a href="#">联系我们</a></li>
+		                    <li class="divider"></li>
+		                    <li><a href="#" onclick="page('register')">成员申请</a></li>
+		                    <li class="divider"></li>
+		                    <li><a href="#" onclick="page('editor')">新闻动态编辑</a></li>
+		                </ul>
+		            </li>
+		            <li><a href="#" onclick="page('newslist')">动态</a></li>
+		            <li><a href="#">关于</a></li>
+		        </ul>
+		    </div>
+	    </div>
+	</nav>
+
+	<div id="newslist" style="margin-left:130px; text-align: center;width:100%;" data-options="region:'center',title:'新闻列表',iconCls:'icon-ok'"></div>	
+</body>
+</html>

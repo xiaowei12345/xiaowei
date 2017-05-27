@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Complex Layout - jQuery EasyUI Demo</title>
+		<link rel="stylesheet" type="text/css" href="/third/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="/third/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="/third/demo.css">
+		<script type="text/javascript" src="/third/jquery-form.js"></script>
+		<script type="text/javascript" src="/third/jquery.min.js"></script>
+		<script type="text/javascript" src="/third/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="/third/jquery.tips.js"></script>
+		<script type="text/javascript" src="/third/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/third/pdf.js"></script>
+		<script type="text/javascript" src="/third/js/signin.js"></script>
+		
+		<style type="text/css">
+        .lightbox{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+            z-index: 7;
+            opacity: 0.3;
+            display: block;
+            background-color: rgb(0, 0, 0);
+            display: none;
+        }
+        .pop,iframe{
+            position: absolute;
+            left: 50%;
+            top:0;
+            width: 893px;
+            height: 100%;
+            margin-left: -446.5px;
+            z-index: 9;
+        }
+   		 </style>
+		
+		<script>
+			$(function(){
+				var index = 0;
+				var t = $('#tt');
+				var tabs = t.tabs('tabs');
+				setInterval(function(){
+					t.tabs('select', tabs[index].panel('options').title);
+					index++;
+					if (index >= tabs.length){
+						index = 0;
+					}
+				}, 3000);
+			});
+			
+			function pass(){
+				var username = $("#username").val();
+				if(username.trim()==""){
+					$("#username").tips({
+						side:3,
+			            msg:'不能匿名签到偶',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					return false;
+				}
+				var username = $("#username").val();
+				handleAction('{"type":'+'sign'+',"username":'+username+'}');
+				$('#sign').window('close');
+				$("#username").val("");
+			}
+			
+			function showPdf(isShow) {
+	            var state = "";
+	            if (isShow) {
+	                state = "block";
+	            } else {
+	                state = "none";
+	            }
+	            var pop = document.getElementById("pop");
+	            pop.style.display = state;
+	            var lightbox = document.getElementById("lightbox");
+	            lightbox.style.display = state;
+	            var url = '/third/doc/eduHelp.pdf';
+	        }
+	        function close() {
+	            showPdf(false);
+	        }
+	        
+	        function page(type){
+	        	handleAction('{"type":'+type+'}');
+	        }
+	        
+	        function uploadPic(){ 
+	        	if($("#filename").val()==""){  
+                    $.messager.alert("提示","请填写文件名");  
+                    return false;  
+                }  
+	            	
+	            $("#p").submit();     
+            	showCheckProgress();
+            }  
+	        
+            var timerId;  
+			function showCheckProgress(){  
+			   $('#progressDlg').dialog('open')
+			   $("#p2").progressbar({    
+			        value : 0,          
+			        text : '{value}%'   
+			   });   
+			   timerId = window.setInterval(getCheckProgress,1000);  
+		   	}
+			 
+			function getCheckProgress(){  
+			     $.ajax({  
+			         type:"post",
+			         url:"/m/uploadprogress",
+			         timeout:3000,
+			         dataType:"json",
+			         success:function(data){  
+				     	if(data.progressValue>=100){  
+				        	window.clearInterval(timerId); 
+				        		$('#progressDlg').dialog('close')
+				            	$('#dg').datagrid('load');  
+				                $('#importBtn').css('display','inline-block');  
+				                $('#showProgress').css('display','none');  
+				        } 
+			           	$("#p2").progressbar('setValue',data.progressValue);  
+			         },  
+			
+			     	 error:function(){  
+			      	 	window.clearInterval(timerId);  
+			            alert("请求出错");  
+			         }  
+			    });  
+			 }  
+ 
+		</script>
+	</head>
+<body class="easyui-layout" onload="pass2()">
+	
+	<div class="lightbox" id="lightbox"></div>
+    <div id="pop" class="pop" style="display: none;">
+        <a href="javascript:close()" style="
+            position: absolute;
+            right: -90px;
+            display: inline-block;
+            width: 80px;
+            height: 30px;
+        	id="close"
+        	class="easyui-linkbutton" 
+        	plain="true">关闭</a>
+        <iframe src="" frameborder="0" id="pdfContainer" name="pdfContainer"></iframe>
+    </div>
+
+	<div class="easyui-layout" data-options="region:'north',border:false" style="height: 120px">
+		<div data-options="region:'north',border:false" style="height:68px;background-image: url(/third/images/logo.png)"></div>
+		<div data-options="region:'south',border:false,split:true" style="height:55px;">
+			<div class="easyui-panel" style="padding: 10px;">
+				<a href="/app/uitest" class="easyui-linkbutton" data-options="plain:true" onclick="">首页</a>
+				<a id="btn-edit" href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-edit'">操作</a> 
+				<a href="#"	class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-help'">帮助</a>
+				<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-news'" onclick="page('newslist')">动态</a>	 
+				<a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">关于</a>
+			</div>
+			<div id="mm1" style="width: 150px;">
+				<div data-options="iconCls:'icon-undo'">任务接收</div>
+				<div data-options="iconCls:'icon-redo'">成员召回</div>
+				<div class="menu-sep"></div>
+				<div>驻点分布</div>
+				<div>入驻申请</div>
+				<div style="text-align: left;">
+					<a href="#" class="easyui-linkbutton" onclick="page('register')"; plain="true" style="text-align: left;">成员申请</a>
+				</div>
+				<div class="menu-sep"></div>
+				<div>
+					<span>更多</span>
+					<div>
+						<div>
+							<a href="#" class="easyui-linkbutton" onclick="page('editor')"; plain="true" style="text-align: left;">新闻动态编辑</a>
+						</div>
+						<div>Link</div>
+						<div>Navigation Toolbar</div>
+						<div>Bookmark Toolbar</div>
+						<div class="menu-sep"></div>
+						<div>New Toolbar...</div>
+					</div>
+				</div>
+			</div>
+			<div id="mm2" style="width: 100px;">
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">入驻流程</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">最新消息</a>
+				</div>
+				<div>
+					<a href="/third/doc/eduHelp.pdf" target="pdfContainer" class="easyui-linkbutton" plain="true" onclick="showPdf(true)">联系我们</a>
+				</div>
+			</div>
+			<div id="mm3" class="menu-content"
+				style="background: #f0f0f0; padding: 10px; text-align: left">
+				<img src="http://www.jeasyui.com/images/logo1.png"
+					style="width: 150px; height: 40px">
+				<p style="font-size: 14px; color: #444;">Try jQuery EasyUI to
+					build your modern, interactive, javascript applications.</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="easyui-layout" data-options="region:'south',split:true" style="height: 120px;">
+		<div data-options="region:'east',split:true" title="签到" style="width:220px;">
+			<div style="text-align:center; padding:10px;background:#fafafa;width:90%;border:0px solid #ccc" >今日已签到：<span id="signin" style="color: red"></span> 人</div>
+			<div style="text-align:center; padding:10px;background:#fafafa;width:90%;border:0px solid #ccc">
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#sign').window('open')">打卡签到</a>
+				<div id="sign" closed="true" class="easyui-window" title="sign in" data-options="iconCls:'icon-save'" style="width:500px;height:200px;padding:5px;">
+					<div class="easyui-layout" data-options="fit:true">
+						<div data-options="region:'center'" style="padding:10px;">
+							<form  action="/m/person" name="Form" id="Form" method="post" >
+								请输入您的用户名：<input type="text" name="username"
+									id="username" value="" title="签到" />
+							</form>
+						</div>
+						<div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 0;">
+							<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="pass();" "width:80px">Ok</a>
+							<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="$('#sign').window('close')" style="width:80px">Cancel</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-options="region:'center',iconCls:'icon-ok'" title="版块链接" style="padding:0px">
+			<div style="text-align:center; padding:20px;background:#fafafa;width:96%;border:0px solid #ccc">
+				<a href="http://www.beryoo.cn" target="_blank" class="easyui-linkbutton" plain="true">友情链接</a>
+				<a href="http://www.cnhonkerarmy.com" target="_blank" class="easyui-linkbutton" plain="true">新闻动态</a>
+				<a href="http://www.cnhonkerarmy.com/purpose.htm" target="_blank" class="easyui-linkbutton" plain="true">网站宗旨</a>
+				<a href="http://www.cnhonkerarmy.com/post.htm" target="_blank" class="easyui-linkbutton" plain="true">职位申请</a>
+			</div>
+		</div>
+	</div>
+	
+	<div data-options="region:'east',split:true" title="任务文件浏览器"
+		style="width: 180px;">
+		<ul class="easyui-tree"
+			data-options="url:'/m/treedata',method:'get',animate:true,dnd:true"></ul>
+	</div>
+	<div data-options="region:'west',split:true" title="工具"
+		style="width: 275px;">
+		<div class="easyui-accordion" data-options="fit:true,border:false">
+			<div title="任务文件提交" style="padding: 10px;">
+				<form id="p" method="POST" enctype="multipart/form-data" accept="image/gif, image/jpeg,image/jpg, image/png" action="/m/fileupload">   
+					<div style="margin:20px 0;"></div>
+					<div style="margin-bottom:20px">
+						<div>文件名:</div>
+						<input id="filename" name="filename" class="easyui-textbox" style="width:100%" />
+					</div>
+					<div style="margin-bottom:20px">
+						<div>任务文件:</div>
+						<input class="easyui-filebox" id="file" name="file" data-options="prompt:'Choose a file...'" style="width:100%" />
+					</div>
+					<div>
+						<a href="javascript:void(0)" class="easyui-linkbutton" style="width:100%" onclick="uploadPic();">提交</a>
+					</div>
+					
+					<div id="progressDlg" class="easyui-dialog" title="执行进度" style="width: 600px;hight:400px;" data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,collapsible:true, buttons: '#progressDlgBtns'">  
+				        <div style="padding: 10px 60px 20px 60px">  
+				          <div id="p2" class="easyui-progressbar" style="width:400px;"></div>  
+				        </div>  
+				    </div>  
+				    <div id="progressDlgBtns" style="width: 600px;">  
+				        <a href="javascript:void(0)" class="easyui-linkbutton" style="padding: 4px;" onclick="javascript:$('#progressDlg').dialog('close')">关闭</a>  
+				    </div> 
+				</form>
+			</div>
+			
+			<div title="日历" style="padding: 10px;">
+				<div style="margin:20px 0"></div>
+				<div class="easyui-calendar" showWeek="true" weekNumberHeader="Wk" 
+				data-options="months:['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']" 
+				style="width:250px;height:250px;"></div>
+			</div>
+			
+			<div title="赞助商" data-options="selected:true" style="padding: 0px">
+				<div id="tt" class="easyui-tabs" style="width:263px;height:400px;">
+					<div title="云云" style="padding:10px;">
+						<img src="/third/images/yun.jpg">
+					</div>
+					<div title="强强" style="padding:10px;">
+						<img src="/third/images/qiang.jpg">
+					</div>
+					<div title="腾腾" style="padding:10px;">
+						<img src="/third/images/teng.jpg">
+					</div>
+					<div title="林林" style="padding:10px;">
+						<img src="/third/images/lin.jpg">
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<div
+		data-options="region:'center',title:'信息数据',iconCls:'icon-ok'">
+		<div class="easyui-tabs"
+			data-options="fit:true,border:false,plain:true">
+			<div title="中国红客" data-options="href:'/third/chird/_content.html'"
+				style="padding: 10px"></div>
+			<div title="已入驻会员信息" style="padding: 5px">
+				<table class="easyui-datagrid"
+					data-options="url:'/m/griddata',method:'get',singleSelect:true,fit:true,fitColumns:true">
+					<thead>
+						<tr>
+							<th data-options="field:'recid'" width="140">编号</th>
+							<th data-options="field:'city'" width="100">城市名称</th>
+							<th data-options="field:'username',align:'right'" width="80">负责人</th>
+							<th data-options="field:'reason',align:'right'" width="80">申请原因</th>
+							<th data-options="field:'phone'" width="150">电话</th>
+							<th data-options="field:'remark',align:'center'" width="50">备注</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	function pass2(){
+		handleAction('{"type":'+'sign'+'}');
+	}
+</script>
+</html>
